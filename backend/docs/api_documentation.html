@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management API Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+        h3 {
+            color: #7f8c8d;
+            margin-top: 20px;
+        }
+        .endpoint {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        .get { background: #27ae60; color: white; }
+        .post { background: #3498db; color: white; }
+        .put { background: #f39c12; color: white; }
+        .delete { background: #e74c3c; color: white; }
+        code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .model {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .param {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .param-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .param-type {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .required {
+            color: #e74c3c;
+            font-size: 12px;
+        }
+        .optional {
+            color: #95a5a6;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Event Management API Documentation</h1>
+        <p>A serverless REST API for managing events, built with FastAPI, AWS Lambda, and DynamoDB.</p>
+
+        <h2>Base URL</h2>
+        <pre>https://&lt;api-id&gt;.execute-api.us-east-1.amazonaws.com/prod/</pre>
+
+        <h2>Data Models</h2>
+        
+        <div class="model">
+            <h3>EventCreate</h3>
+            <p>Model for creating a new event.</p>
+            <div class="param">
+                <span class="param-name">eventId</span>
+                <span class="param-type">string</span>
+                <span class="required">required</span>
+                <p>Unique identifier for the event (min length: 1)</p>
+            </div>
+            <div class="param">
+                <span class="param-name">title</span>
+                <span class="param-type">string</span>
+                <span class="required">required</span>
+                <p>Event title (min length: 1)</p>
+            </div>
+            <div class="param">
+                <span class="param-name">description</span>
+                <span class="param-type">string</span>
+                <span class="required">required</span>
+                <p>Event description (min length: 1)</p>
+            </div>
+            <div class="param">
+                <span class="param-name">date</span>
+                <span class="param-type">string</span>
+                <span class="required">required</span>
+                <p>Event date in YYYY-MM-DD format</p>
+            </div>
+            <div class="param">
+                <span class="param-name">location</span>
+                <span class="param-type">string</span>
+                <span class="required">required</span>
+                <p>Event location (min length: 1)</p>
+            </div>
+            <div class="param">
+                <span class="param-name">capacity</span>
+                <span class="param-type">integer</span>
+                <span class="required">required</span>
+                <p>Maximum number of attendees (must be > 0)</p>
+            </div>
+            <div class="param">
+                <span class="param-name">organizer</span>
+                <span class="param-type">string</span>
+                <span class="required">required</span>
+                <p>Event organizer name (min length: 1)</p>
+            </div>
+            <div class="param">
+                <span class="param-name">status</span>
+                <span class="param-type">string</span>
+                <span class="required">required</span>
+                <p>Event status: active, cancelled, or completed</p>
+            </div>
+        </div>
+
+        <div class="model">
+            <h3>EventUpdate</h3>
+            <p>Model for updating an existing event. All fields are optional.</p>
+            <div class="param">
+                <span class="param-name">title</span>
+                <span class="param-type">string</span>
+                <span class="optional">optional</span>
+                <p>Updated event title</p>
+            </div>
+            <div class="param">
+                <span class="param-name">description</span>
+                <span class="param-type">string</span>
+                <span class="optional">optional</span>
+                <p>Updated event description</p>
+            </div>
+            <div class="param">
+                <span class="param-name">date</span>
+                <span class="param-type">string</span>
+                <span class="optional">optional</span>
+                <p>Updated event date in YYYY-MM-DD format</p>
+            </div>
+            <div class="param">
+                <span class="param-name">location</span>
+                <span class="param-type">string</span>
+                <span class="optional">optional</span>
+                <p>Updated event location</p>
+            </div>
+            <div class="param">
+                <span class="param-name">capacity</span>
+                <span class="param-type">integer</span>
+                <span class="optional">optional</span>
+                <p>Updated maximum number of attendees</p>
+            </div>
+            <div class="param">
+                <span class="param-name">organizer</span>
+                <span class="param-type">string</span>
+                <span class="optional">optional</span>
+                <p>Updated event organizer name</p>
+            </div>
+            <div class="param">
+                <span class="param-name">status</span>
+                <span class="param-type">string</span>
+                <span class="optional">optional</span>
+                <p>Updated event status: active, cancelled, or completed</p>
+            </div>
+        </div>
+
+        <h2>API Endpoints</h2>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> /</h3>
+            <p><strong>Description:</strong> Root endpoint returning API information</p>
+            <p><strong>Response:</strong> 200 OK</p>
+            <pre>{
+  "message": "Event Management API",
+  "version": "1.0"
+}</pre>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> /health</h3>
+            <p><strong>Description:</strong> Health check endpoint</p>
+            <p><strong>Response:</strong> 200 OK</p>
+            <pre>{
+  "status": "healthy"
+}</pre>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> /events</h3>
+            <p><strong>Description:</strong> List all events, optionally filtered by status</p>
+            <p><strong>Query Parameters:</strong></p>
+            <ul>
+                <li><code>status</code> (optional): Filter events by status (active, cancelled, completed)</li>
+            </ul>
+            <p><strong>Response:</strong> 200 OK</p>
+            <pre>{
+  "events": [
+    {
+      "eventId": "event-123",
+      "title": "Tech Conference 2024",
+      "description": "Annual technology conference",
+      "eventDate": "2024-12-15",
+      "location": "San Francisco",
+      "eventCapacity": 500,
+      "organizer": "Tech Corp",
+      "eventStatus": "active",
+      "createdAt": "2024-11-07T10:30:00"
+    }
+  ]
+}</pre>
+            <p><strong>Example:</strong></p>
+            <pre>curl https://your-api-url/prod/events
+curl https://your-api-url/prod/events?status=active</pre>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> /events/{event_id}</h3>
+            <p><strong>Description:</strong> Get a specific event by ID</p>
+            <p><strong>Path Parameters:</strong></p>
+            <ul>
+                <li><code>event_id</code> (required): The unique event identifier</li>
+            </ul>
+            <p><strong>Response:</strong> 200 OK (returns event object)</p>
+            <p><strong>Errors:</strong></p>
+            <ul>
+                <li>404 Not Found: Event with specified ID does not exist</li>
+                <li>500 Internal Server Error: Database error</li>
+            </ul>
+            <p><strong>Example:</strong></p>
+            <pre>curl https://your-api-url/prod/events/event-123</pre>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method post">POST</span> /events</h3>
+            <p><strong>Description:</strong> Create a new event</p>
+            <p><strong>Request Body:</strong> EventCreate model (see Data Models section)</p>
+            <p><strong>Response:</strong> 201 Created</p>
+            <pre>{
+  "eventId": "event-123",
+  "message": "Event created successfully"
+}</pre>
+            <p><strong>Errors:</strong></p>
+            <ul>
+                <li>400 Bad Request: Validation error (invalid date format, invalid status, etc.)</li>
+                <li>409 Conflict: Event with specified eventId already exists</li>
+                <li>500 Internal Server Error: Database error</li>
+            </ul>
+            <p><strong>Example:</strong></p>
+            <pre>curl -X POST https://your-api-url/prod/events \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eventId": "event-123",
+    "title": "Tech Conference 2024",
+    "description": "Annual technology conference",
+    "date": "2024-12-15",
+    "location": "San Francisco",
+    "capacity": 500,
+    "organizer": "Tech Corp",
+    "status": "active"
+  }'</pre>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method put">PUT</span> /events/{event_id}</h3>
+            <p><strong>Description:</strong> Update an existing event</p>
+            <p><strong>Path Parameters:</strong></p>
+            <ul>
+                <li><code>event_id</code> (required): The unique event identifier</li>
+            </ul>
+            <p><strong>Request Body:</strong> EventUpdate model (see Data Models section)</p>
+            <p><strong>Response:</strong> 200 OK (returns updated event object)</p>
+            <p><strong>Errors:</strong></p>
+            <ul>
+                <li>400 Bad Request: No fields to update or validation error</li>
+                <li>404 Not Found: Event with specified ID does not exist</li>
+                <li>500 Internal Server Error: Database error</li>
+            </ul>
+            <p><strong>Example:</strong></p>
+            <pre>curl -X PUT https://your-api-url/prod/events/event-123 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Updated Tech Conference 2024",
+    "capacity": 600
+  }'</pre>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method delete">DELETE</span> /events/{event_id}</h3>
+            <p><strong>Description:</strong> Delete an event</p>
+            <p><strong>Path Parameters:</strong></p>
+            <ul>
+                <li><code>event_id</code> (required): The unique event identifier</li>
+            </ul>
+            <p><strong>Response:</strong> 200 OK</p>
+            <pre>{
+  "message": "Event deleted successfully"
+}</pre>
+            <p><strong>Errors:</strong></p>
+            <ul>
+                <li>404 Not Found: Event with specified ID does not exist</li>
+                <li>500 Internal Server Error: Database error</li>
+            </ul>
+            <p><strong>Example:</strong></p>
+            <pre>curl -X DELETE https://your-api-url/prod/events/event-123</pre>
+        </div>
+
+        <h2>Error Handling</h2>
+        <p>The API uses standard HTTP status codes:</p>
+        <ul>
+            <li><strong>200 OK:</strong> Request succeeded</li>
+            <li><strong>201 Created:</strong> Resource created successfully</li>
+            <li><strong>400 Bad Request:</strong> Invalid input or validation error</li>
+            <li><strong>404 Not Found:</strong> Resource not found</li>
+            <li><strong>409 Conflict:</strong> Resource already exists</li>
+            <li><strong>500 Internal Server Error:</strong> Server or database error</li>
+        </ul>
+
+        <h2>CORS Configuration</h2>
+        <p>The API is configured with CORS to allow requests from any origin:</p>
+        <ul>
+            <li>Allow Origins: *</li>
+            <li>Allow Methods: *</li>
+            <li>Allow Headers: *</li>
+            <li>Allow Credentials: true</li>
+        </ul>
+
+        <h2>DynamoDB Implementation Notes</h2>
+        <p>To avoid conflicts with DynamoDB reserved keywords, the following attribute mappings are used:</p>
+        <ul>
+            <li><code>status</code> → <code>eventStatus</code></li>
+            <li><code>capacity</code> → <code>eventCapacity</code></li>
+            <li><code>date</code> → <code>eventDate</code></li>
+        </ul>
+        <p>The API automatically handles these mappings, so clients use the standard field names.</p>
+
+        <h2>Lambda Handler</h2>
+        <p>The FastAPI application is wrapped with Mangum to handle AWS Lambda events:</p>
+        <pre>handler = Mangum(app)</pre>
+
+        <h2>Interactive Documentation</h2>
+        <p>When running locally, FastAPI provides interactive API documentation:</p>
+        <ul>
+            <li><strong>Swagger UI:</strong> http://localhost:8000/docs</li>
+            <li><strong>ReDoc:</strong> http://localhost:8000/redoc</li>
+        </ul>
+    </div>
+</body>
+</html>
